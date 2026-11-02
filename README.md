@@ -60,6 +60,32 @@ documented in [docs/OPERATIONS.md](docs/OPERATIONS.md).
 
 ## Setup and usage
 
+### Required on Mac: enable FnLangSwitch Diagnostics in Input Monitoring
+
+**On my Mac, switching worked with Input Monitoring access granted to
+FnLangSwitch Diagnostics in macOS System Settings.**
+
+1. Open **System Settings > Privacy & Security > Input Monitoring**.
+2. Find **FnLangSwitch Diagnostics** and **turn on the switch next to it**.
+   This is the name of my installed build; for your own build, grant access
+   to the exact app you run.
+3. If it is missing, click **+** and select the current
+   **FnLangSwitch Diagnostics.app**. My installation's exact path is listed below.
+4. Apply **Quit & Reopen** if macOS offers it, or quit and relaunch the app.
+5. Test a short physical **Fn** tap to confirm that the layout changes.
+
+**If the switch is already on but the app does not work:** after a build
+update, I had to remove **only FnLangSwitch Diagnostics** from this list using
+**−**, add the current app again using **+**, and relaunch it. Toggling the
+existing entry off and on did not help. See the
+[recovery journal](docs/OPERATIONS.md) for details and actual access checks.
+
+This enables **Input Monitoring permission for the app named FnLangSwitch
+Diagnostics**. Diagnostic logging starts automatically in this build; there
+is no separate logging setting to enable.
+
+### Other keyboard and app settings
+
 1. In **System Settings > Keyboard**, set **"Press globe key to"** to
    **"Do Nothing"** to disable the system input-source picker.
 2. In **Keyboard > Keyboard Shortcuts > Modifier Keys**, leave **Globe/Fn**
@@ -80,7 +106,7 @@ documented in [docs/OPERATIONS.md](docs/OPERATIONS.md).
    combination such as **Fn+Delete** with switch-on-release enabled. Plain taps
    should change the layout; the combination should preserve it.
 
-### Enabling diagnostics
+### Checking the diagnostic log
 
 **Diagnostics are always enabled in this fork's source.** There is no separate
 diagnostics checkbox or command-line flag. Launching a build from this source
