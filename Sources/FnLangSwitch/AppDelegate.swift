@@ -5,6 +5,7 @@ import SwiftUI
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var inputSourceManager: InputSourceManager!
     private var keyMonitor: KeyMonitor!
+    private var statusItem: NSStatusItem?
     private var settingsWindow: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -14,6 +15,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         keyMonitor = KeyMonitor(inputSourceManager: inputSourceManager)
 
         setSystemIndicator(enabled: false)
+        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        statusItem = item
+        let menu = NSMenu()
+        menu.addItem(withTitle: "Открыть настройки", action: #selector(showSettings), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Завершить", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "")
+        item.menu = menu
+        keyMonitor.onStatus = { [weak self] secure, allowed in
+            self?.statusItem?.button?.title = secure || !allowed ? "Fn ⚠" : "Fn"
+            self?.statusItem?.button?.toolTip = !allowed
+                ? "Нет доступа к мониторингу ввода. Проверьте разрешение macOS."
+                : secure ? "Переключение приостановлено: защищённый ввод. Выйдите из поля пароля или перезапустите удерживающее его приложение."
+                : "Переключение раскладки по Fn работает"
+        }
         keyMonitor.start()
 
         let isLoginItem = SMAppService.mainApp.status == .enabled
@@ -53,6 +67,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         try? kill.run()
     }
 
+
+    @objc private func showSettings() { openSettings() }
 
     private func openSettings() {
         if settingsWindow == nil {
